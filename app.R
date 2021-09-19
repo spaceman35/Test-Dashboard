@@ -24,21 +24,21 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
       menuItem("Cars", tabName = "cars", icon = icon("car")),
       menuItem("Test Schedule", tabName = "schedule", icon = icon("calendar-alt")),
       menuItem("Surveys", tabName = "surveys", icon = icon("poll")),
-      menuItem("Mx Data", tabName = "mx_data", icon = icon("wrench"))
-      menuItem("Paper Surveys", tabName = "surveys_paper", icon = icon("poll"))
+      menuItem("Mx Data", tabName = "mx_data", icon = icon("wrench")),
+      menuItem("Paper Surveys", tabName = "surveys_paper", icon = icon("poll")),
       menuItem("Links", tabName = "links", icon = icon("wrench"))
     )
   ),
   dashboardBody(
     tabItems(
-      tabItem("iris",
+    tabItem("iris",
               box(plotOutput("correlation_plot"), width = 8),
               box(
                 selectInput("features", "Features:",
                             c("Sepal.Width", "Petal.Length",
                               "Petal.Width")), width = 4
               )
-      ),
+    ),
 
     tabItem("cars",
               fluidPage(
@@ -53,7 +53,7 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
     ),
     tabItem("surveys",
             fluidPage(
-            h1("Survey tool"),
+            h1("Survey tool")
             #<iframe src="https://spaceman35.shinyapps.io/AFOTEC-survey-tool/"></iframe>
             #https://spaceman35.shinyapps.io/AFOTEC-survey-tool/
             #trying to display the shiny survey on this tab, will need to do it another way
@@ -63,16 +63,12 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
             fluidPage(
             h1("Mx data import")
             )
-    )
     ),
-        ),
     tabItem("surveys_paper",
             fluidPage(
             h1("Paper surveys (add links to the printouts for backup)")
             )
-    )
     ),
-        ),
     tabItem("links",
             fluidPage(
             h1("Links - add hyperlinks to code repo, afotec sharepoint, the program's Team, etc. ")
