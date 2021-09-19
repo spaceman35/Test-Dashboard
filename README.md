@@ -27,7 +27,7 @@
   </p>
 </p>
 
-
+<a href="https://spaceman35.shinyapps.io/Test-Dashboard/">Link to the shinyapps.io page hosting the dashboard as we test it</a>
 
 <!-- TABLE OF CONTENTS -->
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
