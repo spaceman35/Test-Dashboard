@@ -1,0 +1,14 @@
+name: Test-Dashboard
+title: Test-Dashboard
+username:
+account: spaceman35
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4683132
+bundleId: 5047556
+url: https://spaceman35.shinyapps.io/Test-Dashboard/
+when: 1632013613.06759
+lastSyncTime: 1632013613.0676
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: images/.DS_Store|images/det5.png|README.md
