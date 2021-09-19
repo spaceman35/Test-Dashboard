@@ -7,15 +7,16 @@
 
 library(shiny)
 library(shinydashboard)
-#library(semantic.dashboard) #This might be useful if we want to make it look much prettier/customizable than just a skin color
-#the themes are at semantic-ui-forest.com
+# library(semantic.dashboard) #This might be useful if we want to make it look much prettier/customizable than just a skin color
+# the themes are at https://semantic-ui-forest.com/themes
 library(DT) #datatable package
 
 ## ---------------------------------------------------------------------------------------- ##
 # This is the UI section of the app.R file. This tells the shiny server how to display the survey.
 # For now, I have it displaying a very simple .html file, and the survey the user selects is the "survey" output
 ui <- dashboardPage(skin = "black", #if using shinydashboard
-#ui <- dashboardPage( theme = "slate", #if using semantic.dashboard
+# ui <- dashboardPage( theme = "slate", #if using semantic.dashboard
+# Icons can be found here: https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
   dashboardHeader(title = "Test Dashboard"),
   dashboardSidebar(
     sidebarMenu(
