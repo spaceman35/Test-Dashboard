@@ -14,7 +14,7 @@ library(DT) #datatable package
 ## ---------------------------------------------------------------------------------------- ##
 # This is the UI section of the app.R file. This tells the shiny server how to display the survey.
 # For now, I have it displaying a very simple .html file, and the survey the user selects is the "survey" output
-ui <- dashboardPage( skin = "black", #if using shinydashboard
+ui <- dashboardPage(skin = "black", #if using shinydashboard
 #ui <- dashboardPage( theme = "slate", #if using semantic.dashboard
   dashboardHeader(title = "Test Dashboard"),
   dashboardSidebar(
@@ -33,7 +33,7 @@ ui <- dashboardPage( skin = "black", #if using shinydashboard
               box(
                 selectInput("features", "Features:",
                             c("Sepal.Width", "Petal.Length",
-                              "Petal.Width")),width = 4
+                              "Petal.Width")), width = 4
               )
       ),
 
@@ -43,28 +43,24 @@ ui <- dashboardPage( skin = "black", #if using shinydashboard
               dataTableOutput("carstable")
               )
     ),
-    
     tabItem("schedule",
             fluidPage(
-              h1("Test Schedule")
+            h1("Test Schedule")
             )
     ),
-    
     tabItem("surveys",
             fluidPage(
-              h1("Survey tool")
+            h1("Survey tool")
             )
     ),
-    
     tabItem("mx_data",
             fluidPage(
-              h1("Mx data import")
+            h1("Mx data import")
             )
     )
     )
 )
 )
-
 ## ---------------------------------------------------------------------------------------- ##
 # This is the meat and potatoes of the app....add more details.
 server <- function(input, output) {
@@ -72,10 +68,7 @@ server <- function(input, output) {
    plot(iris$Sepal.Length, iris[[input$features]],
    xlab = "Sepal length", ylab="Features")
  })
- 
  output$carstable <- renderDataTable(mtcars) #mtcars is like iris, just an online data table for demonstration purposes
- 
 }
-
 ## ---------------------------------------------------------------------------------------- ##
 shinyApp(ui, server) #This negates the need to have a server.R and ui.R file.
