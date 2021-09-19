@@ -10,20 +10,20 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/spaceman35/AFOTEC-survey-tool">
+  <a href="https://github.com/spaceman35/Test-Dashboard">
     <img src="images/det5.png" alt="Logo" width="300" height="300">
   </a>
 
-  <h3 align="center">AFOTEC Survey Tool</h3>
+  <h3 align="center">AFOTEC Test Dashboard</h3>
 
   <p align="center">
     project_description
     <br />
-    <a href="https://github.com/spaceman35/AFOTEC-survey-tool"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/spaceman35/Test-Dashboard"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="https://github.com/spaceman35/AFOTEC-survey-tool/issues">Report Bug</a>
+    <a href="https://github.com/spaceman35/Test-Dashboard/issues">Report Bug</a>
     ·
-    <a href="https://github.com/spaceman35/AFOTEC-survey-tool/issues">Request Feature</a>
+    <a href="https://github.com/spaceman35/Test-Dashboard/issues">Request Feature</a>
   </p>
 </p>
 
@@ -81,7 +81,7 @@ _For more examples, please refer to the [Documentation](https://example.com) (po
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/spaceman35/AFOTEC-survey-tool/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/spaceman35/Test-Dashboard/issues) for a list of proposed features (and known issues).
 
 
 
@@ -102,7 +102,7 @@ Contributions are what make the open source community such an amazing place to l
 
 Maj Sean Kelly, AFOTEC Det 5 - sean.kelly.33@spaceforce.mil<br>
 Lt Timothy Dawson, AFOTEC Det 5 - timothy.dawson.7@us.af.mil<br>
-Project Link: [https://github.com/spaceman35/AFOTEC-survey-tool](https://github.com/spaceman35/AFOTEC-survey-tool)
+Project Link: [https://github.com/spaceman35/Test-Dashboard](https://github.com/spaceman35/Test-Dashboard)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
