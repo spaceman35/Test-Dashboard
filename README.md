@@ -15,7 +15,7 @@
   </a>
 
   <h3 align="center">AFOTEC Test Dashboard</h3>
-<iframe height="400" width="100%" frameborder="no" src="https://spaceman35.shinyapps.io/Test-Dashboard/"> </iframe>
+
   <p align="center">
     project_description
     <br />
