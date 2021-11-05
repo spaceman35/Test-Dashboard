@@ -5,10 +5,10 @@ account: spaceman35
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4683132
-bundleId: 5214362
+bundleId: 5215080
 url: https://spaceman35.shinyapps.io/Test-Dashboard/
-when: 1636055707.45337
-lastSyncTime: 1636055707.45338
+when: 1636070076.6012
+lastSyncTime: 1636070076.60122
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: images/.DS_Store|images/det5.png|README.md
+ignoredFiles: README.md

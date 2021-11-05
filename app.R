@@ -19,22 +19,18 @@ library(jsonlite)
 library(DBI)
 library(shinyTime)
 library(DT) #datatable package
+library(timevis) #for cool timeline visualizations via https://github.com/daattali/timevis
 #library(semantic.dashboard) #This might be useful if we want to make it look much prettier/customizable than just a skin color; The themes are at https://semantic-ui-forest.com/themes
 
-##This section reads in each survey file and needs to be duplicated for each survey excel file that we have.
+############################################################################################
+### This section reads in each survey file and needs to be duplicated for each survey excel file that we have. It also pulls the latest version of the master database for viewing/analysis
 UMUXSurvey <- read_excel("surveys/UMUXSurvey.xlsx", na=c("", "NA"))
-#simpleSurvey <- read_excel("surveys/simple_survey.xlsx", na=c("", "NA"))
-#cat("loaded UMUXSurvey:\n") # displays what's happening in the console just to make sure it's all working nicely
-#print(UMUXSurvey) # displays the data in the console just to make sure it's all working nicely
-#cat("loaded simpleSurvey:\n") # displays what's happening in the console just to make sure it's all working nicely
-#print(simpleSurvey) # displays the data in the console just to make sure it's all working nicely
-#currentSurvey <- NA # not being used yet, but might be later
-
+simpleSurvey <- read_excel("surveys/simple_survey.xlsx", na=c("", "NA"))
 dataset <- read.csv("data/datatest.csv") #reads in the dataset csv file - this will need to call whatever our final dataset database looks like
-#surveys <- data.frame(name=c("UMUX", "Simple"), nr=c('UMUX','Simple'))
+sched <- read_excel("schedule.xlsx", na=c("", "NA")) #Reads in the schedule file for the timeline visualization
 
-######################################S3 STUFF###############################################
-###------Get S3 Credentials from Databricks Job -----------------------------------------------
+############################################################################################
+### Get S3 Credentials from Databricks Job
 
 #db_token_value = "dapicba79e0fc2955fcf407d15c163f8382a"
 #db_job_id = 866
@@ -62,8 +58,8 @@ dataset <- read.csv("data/datatest.csv") #reads in the dataset csv file - this w
 #my_creds=httr::content(response_run, "parsed")
 #creds=jsonlite::fromJSON(my_creds$notebook_output$result)
 
-#####################################MAIN CODE###############################################
-### -----Environment variables-----------------------------------------------------------------
+############################################################################################
+### Environment Variables
 
 formName <- "Survey Data"
 resultsDir <- file.path("data", formName)
@@ -95,14 +91,12 @@ getRequired_internal <- function(questions) {
   return(out)
 }
 
-# names of the fields on the form we want to save
-fieldNames <- c("Uniform"
-)
-
 getFormattedTimestamp <- function() {
   format(Sys.time(), "%Y%m%d-%H%M%OS")
 }
 
+############################################################################################
+### This section adds some "exted Input types" to create custom inputs from the survey excel file.
 
 extendInputType("check", {
   shiny::checkboxGroupInput(
@@ -171,33 +165,49 @@ extendInputType("time", {
   )
 })
 
+############################################################################################
+### This is the section that creates the timeline visualization later on
+# sched <- data.frame(
+#   id      = 1:4,
+#   content = c("Item one", "Item two",
+#               "Ranged item", "Item four"),
+#   start   = c("2016-01-10", "2016-01-11",
+#               "2016-01-20", "2016-02-14 15:00:00"),
+#   end     = c(NA, NA, "2016-02-04", NA)
+# )
+
+############################################################################################
+### This is the UI section of the app.R file. This tells the shiny server how to display the survey.
 
 
-## ---------------------------------------------------------------------------------------- ##
-# This is the UI section of the app.R file. This tells the shiny server how to display the survey.
-# For now, I have it displaying a very simple .html file, and the survey the user selects is the "survey" output
 ui <- dashboardPage(skin = "black", #if using shinydashboard
 # ui <- dashboardPage( theme = "slate", #if using semantic.dashboard
-# Icons can be found here: https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
   dashboardHeader(title = "Test Dashboard"), #dashboardHeader has more potential, I just didn't use it yet
   dashboardSidebar(
     sidebarMenu(
       menuItem("Home", tabName = "home", icon = icon("dashboard")),
       menuItem("Data", tabName = "data", icon = icon("th")),
+      menuItem("Data Visualization", tabName = "data_vis", icon = icon("th")),
       menuItem("Test Schedule", tabName = "schedule", icon = icon("calendar-alt")),
       menuItem("Surveys", tabName = "surveys", icon = icon("poll")),
-      menuItem("Mx Data", tabName = "mx_data", icon = icon("wrench")),
+      menuItem("Data Import", tabName = "data_import", icon = icon("wrench")),
       menuItem("Paper Surveys", tabName = "surveys_paper", icon = icon("poll")),
       menuItem("Links", tabName = "links", icon = icon("wrench"))
     )
   ),
+# Icons can be found here: https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
 
-#This section defines what is in each tab. It uses markdown, but html tags work as well.
+############################################################################################
+### This section defines what is in each tab. It uses R markdown, but html tags work as well.
   dashboardBody( 
     tabItems(
       tabItem("home",
               fluidPage(
-                h1("Home page")
+                h1("Home page"),
+                img(src = "det5.png", height = "25%", width = "25%", align = "center"),
+                br(),
+                p("Welcome to the test dashboard! This is a work in progress by AFOTEC Det 5/MTO analysts, but once it's in a stable, generic form, we plan on exporting it for wider use."),
+                p("On the left-hand sidebar, you'll see various tabs for different areas of the dashboard. This is meant to be a mostly all-in-one place to add data, view existing data, and visualize the data however you need to. An in-depth readme or how-to guide will follow once the kinks are worked out and once we have a working prototype with real data.")
               )
 
       ),
@@ -206,14 +216,25 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
     tabItem("data",
               fluidPage(
               h1("Test Data"),
-              div(style = 'overflow-x:scroll',dataTableOutput("datatable",width="100%")) #displays the datatable called in the server section and adds scroll functionality 
+              div(style = 'overflow-x:scroll; overflow-y:scroll', dataTableOutput("datatable", width="100%")) #displays the datatable called in the server section and adds scroll functionality 
               
               )
     ),
     
-    tabItem("schedule",
+    tabItem("data_vis",
             fluidPage(
-            h1("Test Schedule")
+              h1("Data Visualization"),
+
+            )
+    ),
+    
+    tabItem("schedule",
+            h1("Test Schedule"),
+            fluidPage(
+            p("To edit this schedule, edit the schedule.xlsx file in the code repository."),
+            timevisOutput("timeline"),
+            dataTableOutput("timelineTable")
+            
             )
     ),
     
@@ -221,17 +242,37 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
             fluidPage(
             h1("Survey tool"),
             p("The links below take you to the different survey or data collection forms for this program. After submitting each survey, the data will make its way to the database. It may take a few minutes for the data to show up, or it may need to be adjudicated first."),
-            #fluidRow(selectInput("surveySelection", label = h5("Select a survey"), choices=c('UMUX','Simple'))),
-            #fluidRow(htmlOutput("frame"))
-            #fluidRow(htmlOutput("surveyFrame")),
-            uiOutput("survey")
+            #selectInput("surveySelection", label = h5("Select a survey"), choices=c("UMUX Survey", "Simple Survey"))
+            selectInput("surveySelection", "Survey Selection",
+                        c("UMUX Survey" ,
+                          "Simple Survey")),
+            tableOutput("Survey")
+            #fluidRow(uiOutput("Survey"))
             )
     ),
     
-    tabItem("mx_data",
+    tabItem("data_import",
             fluidPage(
-            h1("Mx data import"),
-            p("Put in the mx data importer tool here once it's ready.")
+            #h1("Data Import"),
+            p("Currently, this tool just allows you to temporarily upload a csv file for analysis, but it does not store it in the AWS S3 Cloud where the rest of our data is stored."),
+            #fileInput("file1", "Choose CSV File", accept = ".csv", buttonLabel="Upload data here")
+            #)
+              titlePanel("File Input Tool"),
+              sidebarLayout(
+                sidebarPanel(
+                  fileInput("file","Upload a CSV file here"), 
+                  helpText("Default max. file size is 5MB"),
+                  tags$hr(),
+                  h5(helpText("Select the read.table parameters below")),
+                  checkboxInput(inputId = 'header', label = 'Header', value = FALSE),
+                  checkboxInput(inputId = "stringAsFactors", "stringAsFactors", FALSE),
+                  br(),
+                  radioButtons(inputId = 'sep', label = 'Separator', choices = c(Comma=',',Semicolon=';',Tab='\t', Space=''), selected = ',')
+                ),
+                mainPanel(
+                  uiOutput("tb")
+                )
+              )
             )
     ),
     
@@ -269,39 +310,44 @@ ui <- dashboardPage(skin = "black", #if using shinydashboard
 )
 )
 
+############################################################################################
+### This is the server section of the R app from here on out.
 
-## ---------------------------------------------------------------------------------------- ##
-# This is the server half of the shiny app.
 server <- function(input, output, session) {
 
- output$datatable <- renderDataTable(dataset) #This calls our dataset pulled from the csv at the very top of this code. There are a lot of other things we can do to clean up this dataframe using mutates, filters, rename_all(~str_to_title(.x)), etc.
+output$datatable <- renderDataTable(dataset) #This calls our master dataset pulled from the csv at the very top of this code. There are a lot of other things we can do to clean up this dataframe using mutates, filters, rename_all(~str_to_title(.x)), etc.
 
+############################################################################################
+### This renders the timeline based off the timeline data in the beginning of this code
+output$timeline <- renderTimevis({
+  timevis(sched)
+})
+sched_simple = subset(sched, select = -c(type, title)) #This hides the type, title, and group columns that I don't need to see in table form
+output$timelineTable <- renderDataTable(sched_simple)
 
-# #This renders a chosen survey into the frame in the survey tab.
-#  observe({ 
-#    query <- surveys[which(surveys$nr==input$surveySelection),2]
-#    test <<- paste0("http://news.scibite.com/scibites/news.html?q=GENE$",query)
-#  })
-#  output$frame <- renderUI({
-#    input$surveySelection
-#    display <- tags$iframe(src=test, height="100%", width="100%")
-#    # print(my_test)
-#    display
-#  })
-#  
-output$survey <- renderUI({
-  #input$surveySelection
-  surveyOutput(df = UMUXSurvey, #the dataframe is the appropriate excel file called earlier
+############################################################################################
+### This section is to choose which survey to render and then renders it from the source .xlsx file it read in earlier
+
+ surveyInput <- reactive({
+   if (input$surveySelection == "UMUX Survey"){
+     dataset <- UMUXSurvey
+   }
+   else if (input$surveySelection == "Simple Survey"){
+     dataset <- simpleSurvey
+   }
+   return(dataset)
+ })
+ 
+output$Survey <- renderUI({
+  surveyOutput(df = surveyInput(), #the dataframe is the appropriate excel file called earlier
                theme="blue", #can take normal colors or hex codes
                survey_title = "Test Survey", #this goes on the top of the page
                survey_description = "Welcome! Please fill out this test survey to check how data is stored in the database." #add some instructions, etc. for the survey
   )
 })
-cat("Survey rendering...\n") #just useful to see in the R console
-#renderSurvey()
-#currentSurvey <<- "UMUX Survey" #name of the survey in plain english for use in displays
 
-
+############################################################################################
+### This section defines what happens when a user submits the survey.
 
 observeEvent(input$submit, {
   results <- getSurveyData()
@@ -322,29 +368,23 @@ observeEvent(input$submit, {
   results_final <- header.true(results_resp_transpose)
   print(results_final)
   
-  ## attempt to save response as local text file
-  # read the info into a dataframe
-  isolate(
-    infoList <- t(sapply(fieldNames, function(x) x = input[[x]]))
-  )
-  
-  # generate a file name based on timestamp, user name, and form contents
+  # generate a file name based on timestamp and a unique hash
+  hash_seed <- "hello world"
   isolate(
     fileName <- paste0(
       paste(
         getFormattedTimestamp(),
-        # input$lastName,
-        # input$firstName,
-        digest(infoList, algo = "md5"),
+        digest(hash_seed, algo = "md5"),
         sep = "_"
       ),
       ".csv"
     )
   )
+
+
+############################################################################################
+### This code chunk writes the csv file and will have to change based on where we store persistent data
   
-  # write out the results
-  ### This code chunk writes a response and will have to change
-  ### based on where we store persistent data
   write.csv(x = results_final, file = file.path(resultsDir, fileName),
             row.names = FALSE)
   #    write.csv(x = results_final, file = file.path(tempdir(), fileName),
@@ -354,7 +394,9 @@ observeEvent(input$submit, {
   #                         FUN = write.csv,
   #                         bucket = "usaf-data-tenant-afac/det5/shinywritetest/1-transient")
   
-  ### End of writing data
+
+############################################################################################
+### After submitting the survey, it'll thank the user here.
   
   shiny::showModal(
     shiny::modalDialog(
@@ -365,6 +407,37 @@ observeEvent(input$submit, {
   )
 })
 
+############################################################################################
+### This section is for the file upload tab. Essentially, I wanted a way to upload a .csv file in various formats and analyze the data
+
+data <- reactive({
+  file1 <- input$file
+  if(is.null(file1)){return()} 
+  read.table(file=file1$datapath, sep=input$sep, header = input$header, stringsAsFactors = input$stringAsFactors)
+})
+# this reactive output contains the summary of the dataset and display the summary in table format
+output$filedf <- renderTable({
+  if(is.null(data())){return ()}
+  input$file
+})
+# this reactive output contains the summary of the dataset and display the summary in table format
+output$sum <- renderTable({
+  if(is.null(data())){return ()}
+  summary(data())
+})
+# This reactive output contains the dataset and display the dataset in table format
+output$table <- renderTable({
+  if(is.null(data())){return ()}
+  data()
+})
+# the following renderUI is used to dynamically generate the tabsets when the file is loaded. Until the file is loaded, app will not show the tabset.
+output$tb <- renderUI({
+    tabsetPanel(tabPanel("About file", tableOutput("filedf")),tabPanel("Data", tableOutput("table")),tabPanel("Summary", tableOutput("sum")))
+})
+
 }
-## ---------------------------------------------------------------------------------------- ##
-shinyApp(ui, server) #This negates the need to have a server.R and ui.R file.
+
+############################################################################################
+### #This negates the need to have a server.R and ui.R file.
+
+shinyApp(ui, server) 
