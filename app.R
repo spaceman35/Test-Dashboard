@@ -165,16 +165,6 @@ extendInputType("time", {
   )
 })
 
-############################################################################################
-### This is the section that creates the timeline visualization later on
-# sched <- data.frame(
-#   id      = 1:4,
-#   content = c("Item one", "Item two",
-#               "Ranged item", "Item four"),
-#   start   = c("2016-01-10", "2016-01-11",
-#               "2016-01-20", "2016-02-14 15:00:00"),
-#   end     = c(NA, NA, "2016-02-04", NA)
-# )
 
 ############################################################################################
 ### This is the UI section of the app.R file. This tells the shiny server how to display the survey.
